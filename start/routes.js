@@ -21,3 +21,7 @@ Route.get('/', () => {
 Route.post('/sessions', 'SessionController.store');
 Route.post('/forgot', 'ForgotPasswordController.store').validator('Forgot');
 Route.post('/reset', 'ResetPasswordController.store').validator('Reset');
+Route.post('/user', 'UserController.store').validator('User');
+Route.group(() => {
+  Route.delete('/user', 'UserController.destroy');
+}).middleware('auth');
