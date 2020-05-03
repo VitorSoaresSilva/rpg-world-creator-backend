@@ -14,9 +14,16 @@ const Factory = use('Factory');
 
 Factory.blueprint('App/Models/User', (faker, i, data = {}) => {
   return {
-    name: faker.name(),
+    name: faker.username(),
     email: faker.email(),
     password: faker.string(),
+    ...data,
+  };
+});
+Factory.blueprint('App/Models/Token', async (faker, i, data = {}) => {
+  return {
+    type: data.type || 'refreshtoken',
+    token: await faker.string({ length: 20 }),
     ...data,
   };
 });

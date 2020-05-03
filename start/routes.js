@@ -19,3 +19,5 @@ Route.get('/', () => {
 });
 
 Route.post('/sessions', 'SessionController.store');
+Route.post('/forgot', 'ForgotPasswordController.store').validator('Forgot');
+Route.post('/reset', 'ResetPasswordController.store').validator('Reset');
