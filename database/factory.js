@@ -27,3 +27,12 @@ Factory.blueprint('App/Models/Token', async (faker, i, data = {}) => {
     ...data,
   };
 });
+Factory.blueprint('App/Models/Character', (faker, i, data = {}) => {
+  return {
+    name: faker.username(),
+    race: faker.string(),
+    characterClass: faker.string(),
+    level: faker.integer({ min: 1, max: 20 }),
+    ...data,
+  };
+});

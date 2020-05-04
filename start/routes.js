@@ -25,4 +25,5 @@ Route.post('/user', 'UserController.store').validator('User');
 Route.group(() => {
   Route.delete('/user', 'UserController.destroy');
   Route.put('/user', 'UserController.update');
+  Route.resource('characters', 'CharacterController').apiOnly();
 }).middleware('auth');
