@@ -1,7 +1,7 @@
 class Forgot {
   get rules() {
     return {
-      email: "email|required"
+      email: 'email|required',
     };
   }
 }

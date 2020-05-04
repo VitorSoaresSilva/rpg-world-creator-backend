@@ -23,13 +23,7 @@ test('It should be able to create a new user', async ({ assert, client }) => {
 
 test('It should be able to delete an user', async ({ assert, client }) => {
   const user = await Factory.model('App/Models/User').create();
-  const response = await client
-    .delete('/user')
-    .loginVia(user, 'jwt')
-    .send({
-      id: user.id,
-    })
-    .end();
+  const response = await client.delete('/user').loginVia(user, 'jwt').end();
   response.assertStatus(204);
 
   const checkUser = await User.findBy('id', user.id);
