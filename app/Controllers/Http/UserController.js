@@ -33,7 +33,13 @@ class UserController {
   }
 
   async update({ request, response, auth }) {
-    const { name, email, oldPassword, newPassword } = request.all();
+    const {
+      name,
+      email,
+      oldPassword,
+      newPassword,
+      confirmPassword,
+    } = request.all();
     if (email && email !== auth.user.email) {
       const userExists = await User.findBy('email', email);
       if (userExists) {
@@ -45,6 +51,7 @@ class UserController {
       newPassword &&
       !(
         newPassword !== oldPassword &&
+        newPassword === confirmPassword &&
         Hash.verify(oldPassword, auth.user.oldPassword)
       )
     ) {

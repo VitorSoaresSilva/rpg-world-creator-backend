@@ -49,6 +49,7 @@ test('It shuld be able to update user', async ({ assert, client }) => {
       email: 'newEmail@gmail.com',
       oldPassword: user.password,
       newPassword: 'newPasword',
+      confirmPassword: 'newPasword',
     })
     .end();
   response.assertStatus(200);
