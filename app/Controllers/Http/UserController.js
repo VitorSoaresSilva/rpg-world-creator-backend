@@ -46,22 +46,20 @@ class UserController {
         return response.status(400).json({ message: 'Email Already exists' });
       }
     }
-
-    if (
-      newPassword &&
-      !(
-        newPassword !== oldPassword &&
-        newPassword === confirmPassword &&
-        Hash.verify(oldPassword, auth.user.oldPassword)
-      )
-    ) {
+    const wantToChangePassword = newPassword || oldPassword || confirmPassword;
+    const canChangePassword =
+      newPassword !== oldPassword &&
+      newPassword === confirmPassword &&
+      (await Hash.verify(oldPassword, auth.user.password));
+    if (wantToChangePassword && !canChangePassword) {
       return response.status(400).json({ message: 'Password incorrect' });
     }
     const user = await User.findBy('id', auth.user.id);
     user.name = name || auth.user.name;
     user.email = email || auth.user.email;
-    user.password = newPassword || auth.user.password;
-
+    if (wantToChangePassword) {
+      user.password = newPassword;
+    }
     await user.save();
     return user;
   }

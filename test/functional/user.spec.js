@@ -5,7 +5,7 @@ trait('Auth/Client');
 const Factory = use('Factory');
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const User = use('App/Models/User');
-
+const Hash = use('Hash');
 test('It should be able to create a new user', async ({ assert, client }) => {
   const response = await client
     .post('/user')
@@ -37,22 +37,31 @@ test('It should be able to delete an user', async ({ assert, client }) => {
 });
 
 test('It shuld be able to update user', async ({ assert, client }) => {
+  const data = {
+    name: 'Novo Nome',
+    email: 'newEmail@gmail.com',
+    newPassword: 'newPassword',
+    password: 'oldPassword',
+  };
   const user = await Factory.model('App/Models/User').create({
     email: 'oldEmail@gmail.com',
+    password: data.password,
   });
   const response = await client
     .put('/user')
     .loginVia(user, 'jwt')
     .send({
       id: user.id,
-      name: 'new Name',
-      email: 'newEmail@gmail.com',
-      oldPassword: user.password,
-      newPassword: 'newPasword',
-      confirmPassword: 'newPasword',
+      name: data.name,
+      email: data.email,
+      oldPassword: data.password,
+      newPassword: data.newPassword,
+      confirmPassword: data.newPassword,
     })
     .end();
+
   response.assertStatus(200);
   const checkUser = await User.findBy('id', user.id);
-  assert.equal(checkUser.name, 'new Name');
+  assert.equal(checkUser.name, data.name);
+  assert.equal(await Hash.verify(data.newPassword, checkUser.password), true);
 });
